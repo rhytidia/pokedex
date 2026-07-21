@@ -1,3 +1,8 @@
 node_modules
 dist
+
+# log
 repl.log
+
+# Mac files
+.DS_Store

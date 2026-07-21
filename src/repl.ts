@@ -1,4 +1,5 @@
 import { createInterface } from "readline";
+import { getCommands } from "./command_registry.js"
 
 export function startREPL(): void {
 	const rl = createInterface ({
@@ -14,7 +15,17 @@ export function startREPL(): void {
 			rl.prompt();
 			return;
 		} else {
-			console.log(`Your command was: ${cleaned[0]}`);
+			const registry = getCommands();
+			const command = cleaned[0];
+			if (command in registry) {
+				try {
+					registry[command].callback(registry);
+				} catch (error) {
+					console.error(error);
+				}
+			} else {
+				console.log("Unknown command. Try 'help' for a list of commands.");
+			}
 			rl.prompt();
 		}
 	});
