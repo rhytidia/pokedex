@@ -1,9 +1,9 @@
 import type { State } from "./state.js";
 import { getCommands } from "./command_registry.js"
 
-export function startREPL(state: State): void {
+export async function startREPL(state: State): Promise<void> {
 	state.readline.prompt()
-	state.readline.on('line', (input) => {
+	state.readline.on('line', async (input) => {
 		const cleaned = cleanInput(input);
 		if (cleaned.length === 0) {
 			state.readline.prompt();
@@ -13,7 +13,7 @@ export function startREPL(state: State): void {
 			const command = cleaned[0];
 			if (command in registry) {
 				try {
-					registry[command].callback(state);
+					await registry[command].callback(state);
 				} catch (error) {
 					console.error(error);
 				}
